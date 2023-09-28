@@ -29,6 +29,7 @@ public:
 	float DashForce=150.f;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category=BallBearing)
 	float MaximumSpeed=4.f;
+	friend class ABallBearingHUD;
 protected:
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

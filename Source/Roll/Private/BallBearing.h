@@ -19,16 +19,27 @@ public:
 	UStaticMeshComponent* BallMesh=nullptr;
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category=BallBearing)
 	bool Magnetized=true;
-
+	UFUNCTION(BlueprintCallable)
+	void ResetLocation() const	
+	{
+		BallMesh->SetWorldLocation(InitialLocation+FVector(0.f,0.f,150.f));
+		BallMesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
+		BallMesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+	}
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
+	
 	virtual void Tick(float DeltaTime) override;
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override
+	{
+		Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+		InContact=true;
+	}
+	bool InContact=false;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+private:
+	FVector InitialLocation=FVector::ZeroVector;
+	friend class ABallBearingHUD;
 };
